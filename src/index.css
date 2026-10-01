@@ -1,0 +1,110 @@
+@import 'tailwindcss';
+
+/* Design tokens. `[data-theme='contrast']` below redefines them for maximum visibility. */
+@theme {
+  --font-serif: Georgia, Cambria, 'Times New Roman', Times, serif;
+
+  --color-surface: #0f172a;
+  --color-ink: #e2e8f0;
+  --color-ink-muted: #94a3b8;
+  --color-focus: rgb(148 163 184 / 0.4);
+  --color-panel: #1e293b;
+  --color-panel-border: rgb(255 255 255 / 0.1);
+  --color-accent: #38bdf8;
+}
+
+@layer base {
+  [data-theme='contrast'] {
+    --color-surface: #000000;
+    --color-ink: #fbbf24;
+    --color-ink-muted: rgb(251 191 36 / 0.72);
+    --color-focus: rgb(245 158 11 / 0.5);
+    --color-panel: #0c0a09;
+    --color-panel-border: rgb(251 191 36 / 0.22);
+    --color-accent: #fbbf24;
+  }
+
+  :root {
+    color-scheme: dark;
+  }
+
+  html,
+  body {
+    height: 100%;
+    overflow: hidden;
+    background-color: #0f172a;
+  }
+
+  body {
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
+}
+
+/* Text fades in and out at the top and bottom edges instead of being cut off. */
+@utility mask-fade-y {
+  -webkit-mask-image: linear-gradient(
+    to bottom,
+    transparent 0%,
+    #000 18%,
+    #000 82%,
+    transparent 100%
+  );
+  mask-image: linear-gradient(to bottom, transparent 0%, #000 18%, #000 82%, transparent 100%);
+}
+
+/* Native <dialog> presented as a right-side sheet that slides in and out. */
+@layer components {
+  .editor-sheet {
+    position: fixed;
+    inset: 0 0 0 auto;
+    margin: 0;
+    width: 100%;
+    max-width: 100%;
+    height: 100dvh;
+    max-height: 100dvh;
+    padding: 0;
+    border: 0;
+    border-left: 1px solid var(--color-panel-border);
+    background-color: var(--color-panel);
+    color: var(--color-ink);
+    box-shadow: -24px 0 48px rgb(0 0 0 / 0.45);
+    translate: 100% 0;
+    transition:
+      translate 300ms ease-out,
+      display 300ms allow-discrete,
+      overlay 300ms allow-discrete;
+
+    &[open] {
+      translate: 0 0;
+    }
+
+    @starting-style {
+      &[open] {
+        translate: 100% 0;
+      }
+    }
+
+    &::backdrop {
+      background-color: rgb(0 0 0 / 0);
+      transition:
+        background-color 300ms ease-out,
+        display 300ms allow-discrete,
+        overlay 300ms allow-discrete;
+    }
+
+    &[open]::backdrop {
+      background-color: rgb(0 0 0 / 0.45);
+    }
+
+    @starting-style {
+      &[open]::backdrop {
+        background-color: rgb(0 0 0 / 0);
+      }
+    }
+
+    @media (width >= 40rem) {
+      width: 28rem;
+    }
+  }
+}
